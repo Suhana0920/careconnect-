@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Doctors - CareConnect+</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; color: #1f2937; }
+        .top-nav { background: white; border-bottom: 1px solid #e5e7eb; padding: 0 30px; height: 70px; display: flex; align-items: center; justify-content: space-between; }
+        .logo-section { display: flex; align-items: center; gap: 12px; }
+        .logo-icon { width: 40px; height: 40px; background: #0066cc; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .logo-text { font-size: 20px; font-weight: 700; color: #0066cc; }
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .page-title { font-size: 28px; font-weight: 700; margin-bottom: 10px; }
+        .page-subtitle { font-size: 15px; color: #6b7280; margin-bottom: 30px; }
+        .search-section { background: white; padding: 20px; border-radius: 12px; margin-bottom: 30px; }
+        .search-input { width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 15px; }
+        .doctors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .doctor-card { background: white; border-radius: 12px; padding: 20px; text-align: center; border: 1px solid #e5e7eb; transition: all 0.2s; }
+        .doctor-card:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); transform: translateY(-2px); }
+        .doctor-photo { width: 80px; height: 80px; background: linear-gradient(135deg, #0066cc, #004d99); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 15px; }
+        .doctor-name { font-size: 18px; font-weight: 700; margin-bottom: 5px; }
+        .doctor-specialty { font-size: 14px; color: #0066cc; margin-bottom: 8px; }
+        .doctor-experience { font-size: 13px; color: #6b7280; margin-bottom: 15px; }
+        .doctor-fee { font-size: 16px; font-weight: 700; color: #10b981; margin-bottom: 15px; }
+        .book-btn { width: 100%; padding: 10px; background: #0066cc; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .book-btn:hover { background: #0052a3; }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo-section">
+            <div class="logo-icon">⚕️</div>
+            <div class="logo-text">CareConnect+</div>
+        </div>
+        <a href="/logout/" style="background: #dc2626; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600;">Logout</a>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">👨‍⚕️ Our Doctors</h1>
+        <p class="page-subtitle">Browse our team of 23 healthcare professionals</p>
+
+        <div class="search-section">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search by doctor name or specialty...">
+        </div>
+
+        <div class="doctors-grid" id="doctorsList">
+            <!-- Doctor 1 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👩‍⚕️</div>
+                <div class="doctor-name">Dr. Priya Sharma</div>
+                <div class="doctor-specialty">General Physician</div>
+                <div class="doctor-experience">🎓 12 years experience</div>
+                <div class="doctor-fee">₹500 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/1/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 2 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👨‍⚕️</div>
+                <div class="doctor-name">Dr. Arjun Reddy</div>
+                <div class="doctor-specialty">Dentist</div>
+                <div class="doctor-experience">🎓 8 years experience</div>
+                <div class="doctor-fee">₹800 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/2/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 3 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👩‍⚕️</div>
+                <div class="doctor-name">Dr. Ananya Iyer</div>
+                <div class="doctor-specialty">Ophthalmologist</div>
+                <div class="doctor-experience">🎓 15 years experience</div>
+                <div class="doctor-fee">₹1000 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/3/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 4 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👨‍⚕️</div>
+                <div class="doctor-name">Dr. Vikram Singh</div>
+                <div class="doctor-specialty">Cardiologist</div>
+                <div class="doctor-experience">🎓 20 years experience</div>
+                <div class="doctor-fee">₹1500 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/4/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 5 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👩‍⚕️</div>
+                <div class="doctor-name">Dr. Neha Kapoor</div>
+                <div class="doctor-specialty">Dermatologist</div>
+                <div class="doctor-experience">🎓 10 years experience</div>
+                <div class="doctor-fee">₹900 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/5/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 6 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👨‍⚕️</div>
+                <div class="doctor-name">Dr. Rajesh Kumar</div>
+                <div class="doctor-specialty">Orthopedic</div>
+                <div class="doctor-experience">🎓 18 years experience</div>
+                <div class="doctor-fee">₹1200 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/6/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 7 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👩‍⚕️</div>
+                <div class="doctor-name">Dr. Kavya Menon</div>
+                <div class="doctor-specialty">Pediatrician</div>
+                <div class="doctor-experience">🎓 9 years experience</div>
+                <div class="doctor-fee">₹600 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/7/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 8 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👨‍⚕️</div>
+                <div class="doctor-name">Dr. Amit Patel</div>
+                <div class="doctor-specialty">Psychiatrist</div>
+                <div class="doctor-experience">🎓 14 years experience</div>
+                <div class="doctor-fee">₹1100 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/8/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 9 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👨‍⚕️</div>
+                <div class="doctor-name">Dr. Sanjay Gupta</div>
+                <div class="doctor-specialty">Cardiologist</div>
+                <div class="doctor-experience">🎓 22 years experience</div>
+                <div class="doctor-fee">₹1800 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/9/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 10 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👩‍⚕️</div>
+                <div class="doctor-name">Dr. Deepa Nair</div>
+                <div class="doctor-specialty">General Physician</div>
+                <div class="doctor-experience">🎓 7 years experience</div>
+                <div class="doctor-fee">₹400 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/10/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 11 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👨‍⚕️</div>
+                <div class="doctor-name">Dr. Karthik Rao</div>
+                <div class="doctor-specialty">Orthopedic</div>
+                <div class="doctor-experience">🎓 16 years experience</div>
+                <div class="doctor-fee">₹1300 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/11/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 12 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👩‍⚕️</div>
+                <div class="doctor-name">Dr. Meera Desai</div>
+                <div class="doctor-specialty">Dermatologist</div>
+                <div class="doctor-experience">🎓 11 years experience</div>
+                <div class="doctor-fee">₹850 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/12/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 13 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👨‍⚕️</div>
+                <div class="doctor-name">Dr. Aditya Verma</div>
+                <div class="doctor-specialty">Dentist</div>
+                <div class="doctor-experience">🎓 13 years experience</div>
+                <div class="doctor-fee">₹900 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/13/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 14 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👩‍⚕️</div>
+                <div class="doctor-name">Dr. Pooja Joshi</div>
+                <div class="doctor-specialty">Ophthalmologist</div>
+                <div class="doctor-experience">🎓 12 years experience</div>
+                <div class="doctor-fee">₹950 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/14/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 15 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👨‍⚕️</div>
+                <div class="doctor-name">Dr. Rahul Khanna</div>
+                <div class="doctor-specialty">General Physician</div>
+                <div class="doctor-experience">🎓 15 years experience</div>
+                <div class="doctor-fee">₹550 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/15/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 16 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👩‍⚕️</div>
+                <div class="doctor-name">Dr. Swati Malhotra</div>
+                <div class="doctor-specialty">Pediatrician</div>
+                <div class="doctor-experience">🎓 10 years experience</div>
+                <div class="doctor-fee">₹650 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/16/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 17 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👨‍⚕️</div>
+                <div class="doctor-name">Dr. Tarun Mehta</div>
+                <div class="doctor-specialty">Psychiatrist</div>
+                <div class="doctor-experience">🎓 17 years experience</div>
+                <div class="doctor-fee">₹1200 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/17/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 18 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👩‍⚕️</div>
+                <div class="doctor-name">Dr. Ritu Bhatia</div>
+                <div class="doctor-specialty">Dermatologist</div>
+                <div class="doctor-experience">🎓 8 years experience</div>
+                <div class="doctor-fee">₹800 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/18/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 19 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👨‍⚕️</div>
+                <div class="doctor-name">Dr. Manish Agarwal</div>
+                <div class="doctor-specialty">Cardiologist</div>
+                <div class="doctor-experience">🎓 19 years experience</div>
+                <div class="doctor-fee">₹1600 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/19/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 20 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👩‍⚕️</div>
+                <div class="doctor-name">Dr. Anjali Saxena</div>
+                <div class="doctor-specialty">Ophthalmologist</div>
+                <div class="doctor-experience">🎓 14 years experience</div>
+                <div class="doctor-fee">₹1100 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/20/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 21 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👨‍⚕️</div>
+                <div class="doctor-name">Dr. Varun Chopra</div>
+                <div class="doctor-specialty">Orthopedic</div>
+                <div class="doctor-experience">🎓 21 years experience</div>
+                <div class="doctor-fee">₹1400 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/21/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 22 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👩‍⚕️</div>
+                <div class="doctor-name">Dr. Ishita Sen</div>
+                <div class="doctor-specialty">Dentist</div>
+                <div class="doctor-experience">🎓 6 years experience</div>
+                <div class="doctor-fee">₹700 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/22/'">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor 23 -->
+            <div class="doctor-card">
+                <div class="doctor-photo">👨‍⚕️</div>
+                <div class="doctor-name">Dr. Nikhil Sharma</div>
+                <div class="doctor-specialty">Pediatrician</div>
+                <div class="doctor-experience">🎓 11 years experience</div>
+                <div class="doctor-fee">₹700 consultation</div>
+                <button class="book-btn" onclick="window.location.href='/book-appointment/23/'">📅 Book Appointment</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const search = this.value.toLowerCase();
+            const cards = document.querySelectorAll('.doctor-card');
+            
+            cards.forEach(card => {
+                const name = card.querySelector('.doctor-name').textContent.toLowerCase();
+                const specialty = card.querySelector('.doctor-specialty').textContent.toLowerCase();
+                
+                if (name.includes(search) || specialty.includes(search)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

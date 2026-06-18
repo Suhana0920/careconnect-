@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Doctors - Admin Panel</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; }
+        .top-nav { background: white; padding: 0 30px; height: 70px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e5e7eb; }
+        .logo-text { font-size: 20px; font-weight: 700; color: #dc2626; }
+        .back-btn { background: #f3f4f6; color: #4b5563; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; }
+        .container { max-width: 1400px; margin: 40px auto; padding: 0 30px; }
+        .page-title { font-size: 28px; font-weight: 700; margin-bottom: 30px; }
+        .doctors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .doctor-card { background: white; padding: 25px; border-radius: 12px; border: 1px solid #e5e7eb; }
+        .doctor-name { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+        .doctor-info { font-size: 14px; color: #6b7280; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo-text">All Doctors</div>
+        <a href="/admin-dashboard/" class="back-btn">← Back</a>
+    </nav>
+    <div class="container">
+        <h1 class="page-title">All Doctors ({{ doctors.count }})</h1>
+        <div class="doctors-grid">
+            {% for doctor in doctors %}
+            <div class="doctor-card">
+                <div class="doctor-name">Dr. {{ doctor.name }}</div>
+                <div class="doctor-info">📋 {{ doctor.get_specialty_display }}</div>
+                <div class="doctor-info">🎓 {{ doctor.experience }} years experience</div>
+                <div class="doctor-info">💰 ₹{{ doctor.consultation_fee }} consultation fee</div>
+                <div class="doctor-info">📊 {{ doctor.appointments.count }} total appointments</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

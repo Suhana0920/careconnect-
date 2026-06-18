@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role-Based Access Control - CareConnect+</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #1f2937; }
+        .top-nav { background: white; border-bottom: 1px solid #e5e7eb; padding: 0 30px; height: 70px; display: flex; align-items: center; justify-content: space-between; }
+        .logo-text { font-size: 20px; font-weight: 700; color: #dc2626; }
+        .back-btn { background: #f3f4f6; color: #4b5563; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; }
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        
+        .header-section { background: linear-gradient(135deg, #dc2626, #991b1b); color: white; padding: 40px; border-radius: 15px; text-align: center; margin-bottom: 40px; }
+        .header-icon { font-size: 64px; margin-bottom: 15px; }
+        .header-title { font-size: 32px; font-weight: 700; margin-bottom: 10px; }
+        .header-subtitle { font-size: 16px; opacity: 0.9; }
+        
+        .current-user-box { background: #fff1f2; border: 3px solid #dc2626; border-radius: 12px; padding: 20px; margin-bottom: 40px; display: flex; align-items: center; gap: 20px; }
+        .user-avatar { width: 60px; height: 60px; background: linear-gradient(135deg, #dc2626, #991b1b); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; color: white; }
+        .user-details { flex: 1; }
+        .user-label { font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 4px; }
+        .user-name { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .user-role { background: #dc2626; color: white; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; display: inline-block; }
+        
+        .roles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .role-card { background: white; border-radius: 15px; padding: 30px; border: 3px solid #e5e7eb; transition: all 0.3s; position: relative; }
+        .role-card.active { border-color: #dc2626; box-shadow: 0 8px 30px rgba(220, 38, 38, 0.15); }
+        .role-badge { position: absolute; top: -12px; right: 20px; background: #dc2626; color: white; padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+        .role-icon { font-size: 48px; margin-bottom: 15px; }
+        .role-title { font-size: 22px; font-weight: 700; margin-bottom: 15px; }
+        .role-count { font-size: 14px; color: #6b7280; margin-bottom: 20px; }
+        .permissions-list { list-style: none; padding: 0; }
+        .permissions-list li { padding: 10px 0; border-bottom: 1px solid #f3f4f6; font-size: 14px; display: flex; align-items: center; gap: 10px; }
+        .permissions-list li:last-child { border-bottom: none; }
+        .permission-icon { font-size: 18px; }
+        
+        .demo-section { background: white; border-radius: 12px; padding: 30px; margin-top: 40px; }
+        .demo-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #e5e7eb; }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo-text">🔐 Role-Based Access Control Demo</div>
+        {% if user.is_superuser or user.profile.role == 'admin' %}
+        <a href="/admin-dashboard/" class="back-btn">← Back to Admin Dashboard</a>
+        {% else %}
+        <a href="/dashboard/" class="back-btn">← Back to Dashboard</a>
+        {% endif %}
+    </nav>
+
+    <div class="container">
+        <div class="header-section">
+            <div class="header-icon">🔐</div>
+            <h1 class="header-title">Role-Based Access Control (RBAC)</h1>
+            <p class="header-subtitle">Secure, scalable user permission management in CareConnect+</p>
+        </div>
+
+        <div class="current-user-box">
+            <div class="user-avatar">
+                {% if user.is_superuser or user.profile.role == 'admin' %}🛡️{% elif user.profile.role == 'doctor' %}👨‍⚕️{% else %}👤{% endif %}
+            </div>
+            <div class="user-details">
+                <div class="user-label">YOU ARE CURRENTLY LOGGED IN AS:</div>
+                <div class="user-name">{{ user.get_full_name|default:user.username }}</div>
+                <span class="user-role">
+                    {% if user.is_superuser %}
+                    ADMIN
+                    {% elif user.profile.role %}
+                    {{ user.profile.role|upper }}
+                    {% else %}
+                    USER
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <div class="roles-grid">
+            <!-- PATIENT ROLE -->
+            <div class="role-card {% if user.profile.role == 'patient' %}active{% endif %}">
+                {% if user.profile.role == 'patient' %}<div class="role-badge">YOUR ROLE</div>{% endif %}
+                <div class="role-icon">👤</div>
+                <div class="role-title">Patient</div>
+                <div class="role-count">{{ patient_count }} users with this role</div>
+                <ul class="permissions-list">
+                    <li><span class="permission-icon">✅</span> Book appointments</li>
+                    <li><span class="permission-icon">✅</span> View own medical records</li>
+                    <li><span class="permission-icon">✅</span> Chat with AI assistant</li>
+                    <li><span class="permission-icon">✅</span> Update personal info</li>
+                    <li><span class="permission-icon">❌</span> Access doctor dashboard</li>
+                    <li><span class="permission-icon">❌</span> Access admin panel</li>
+                </ul>
+            </div>
+
+            <!-- DOCTOR ROLE -->
+            <div class="role-card {% if user.profile.role == 'doctor' %}active{% endif %}">
+                {% if user.profile.role == 'doctor' %}<div class="role-badge">YOUR ROLE</div>{% endif %}
+                <div class="role-icon">👨‍⚕️</div>
+                <div class="role-title">Doctor</div>
+                <div class="role-count">{{ doctor_count }} users with this role</div>
+                <ul class="permissions-list">
+                    <li><span class="permission-icon">✅</span> View assigned appointments</li>
+                    <li><span class="permission-icon">✅</span> Add prescriptions</li>
+                    <li><span class="permission-icon">✅</span> Record vital signs</li>
+                    <li><span class="permission-icon">✅</span> View patient records</li>
+                    <li><span class="permission-icon">✅</span> Update medical history</li>
+                    <li><span class="permission-icon">❌</span> Access admin panel</li>
+                </ul>
+            </div>
+
+            <!-- ADMIN ROLE -->
+            <div class="role-card {% if user.is_superuser or user.profile.role == 'admin' %}active{% endif %}">
+                {% if user.is_superuser or user.profile.role == 'admin' %}<div class="role-badge">YOUR ROLE</div>{% endif %}
+                <div class="role-icon">🛡️</div>
+                <div class="role-title">Administrator</div>
+                <div class="role-count">{{ admin_count }} users with this role</div>
+                <ul class="permissions-list">
+                    <li><span class="permission-icon">✅</span> View all patients & records</li>
+                    <li><span class="permission-icon">✅</span> Manage doctors</li>
+                    <li><span class="permission-icon">✅</span> Monitor all appointments</li>
+                    <li><span class="permission-icon">✅</span> Access system analytics</li>
+                    <li><span class="permission-icon">✅</span> Manage user roles</li>
+                    <li><span class="permission-icon">✅</span> Full system control</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h3 class="demo-title">How It Works</h3>
+            <p style="line-height: 1.8; color: #4b5563; margin-bottom: 15px;">
+                When you log in, CareConnect+ checks your role and automatically redirects you to the appropriate dashboard:
+            </p>
+            <ul style="list-style: none; padding-left: 0; line-height: 2.2; color: #4b5563;">
+                <li>🔹 <strong>Patients</strong> → Patient Dashboard with appointment booking & medical records</li>
+                <li>🔹 <strong>Doctors</strong> → Doctor Dashboard with patient appointments & prescription management</li>
+                <li>🔹 <strong>Admins</strong> → Admin Dashboard with full system access & user management</li>
+            </ul>
+            <p style="line-height: 1.8; color: #4b5563; margin-top: 15px;">
+                Each role has different permissions, and users can only access features they're authorized for. This ensures data security and proper workflow management.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

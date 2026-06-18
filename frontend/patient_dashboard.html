@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard - CareConnect+</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            color: #1f2937;
+        }
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0 30px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0066cc;
+        }
+        .nav-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-logout {
+            background: #dc2626;
+            color: white;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .welcome-banner {
+            background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        .welcome-banner h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .welcome-banner p {
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        .btn-book {
+            background: white;
+            color: #0066cc;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+        }
+        .stat-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #0066cc;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .features-grid {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        .feature-content {
+            flex: 1;
+        }
+        .feature-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .feature-desc {
+            font-size: 13px;
+            color: #6b7280;
+        }
+        .badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-live {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .badge-planned {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo-text">CareConnect+ Patient Portal</div>
+        <div class="nav-right">
+            <span style="color: #6b7280;">Welcome, {{ user.get_full_name|default:user.username }}!</span>
+            <a href="/logout/" class="btn btn-logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="welcome-banner">
+            <h1>Welcome back, {{ user.first_name|default:user.username }}! 👋</h1>
+            <p>Your healthcare journey starts here</p>
+            <a href="/book-appointment/" class="btn-book">📅 Book Appointment Now</a>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👨‍⚕️</div>
+                <div class="stat-value">{{ total_doctors }}</div>
+                <div class="stat-label">Doctors Available</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-value">{{ user_appointments_count }}</div>
+                <div class="stat-label">Your Appointments</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🩺</div>
+                <div class="stat-value">8</div>
+                <div class="stat-label">Specialties</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value">4.8</div>
+                <div class="stat-label">Avg. Rating</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">✨ Available Features</h2>
+        <div class="features-grid">
+
+            <div class="feature-card" style="border-left: 4px solid #0066cc;">
+                <div class="feature-icon" style="background: #eff6ff; color: #0066cc;">📅</div>
+                <div class="feature-content">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                        <div class="feature-title">Smart Time Slot Booking</div>
+                        <span class="badge badge-live">✓ Live</span>
+                    </div>
+                    <div class="feature-desc">Book appointments with real-time availability</div>
+                </div>
+                <a href="/book-appointment/" class="btn" style="background: #0066cc; color: white;">Try Now →</a>
+            </div>
+
+            <div class="feature-card" style="border-left: 4px solid #7c3aed;">
+                <div class="feature-icon" style="background: #f5f3ff; color: #7c3aed;">📋</div>
+                <div class="feature-content">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                        <div class="feature-title">Patient Medical Records</div>
+                        <span class="badge badge-live">✓ Live</span>
+                    </div>
+                    <div class="feature-desc">Digital log of visits, prescriptions, vital signs, and lab reports in one place</div>
+                </div>
+                <a href="/patient/medical-records/" class="btn" style="background: #7c3aed; color: white;">View Records →</a>
+            </div>
+
+            <!-- RBAC card — button opens popup -->
+            <div class="feature-card" style="border-left: 4px solid #dc2626;">
+                <div class="feature-icon" style="background: #fff1f2; color: #dc2626;">🔐</div>
+                <div class="feature-content">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                        <div class="feature-title">Role-Based Access Control</div>
+                        <span class="badge badge-live">✓ Live</span>
+                    </div>
+                    <div class="feature-desc">Secure dashboards for patients, doctors, and administrators</div>
+                </div>
+                <button onclick="document.getElementById('rbacModal').style.display='flex'"
+                    class="btn" style="background: #dc2626; color: white; border: none; cursor: pointer;">
+                    Active ✓
+                </button>
+            </div>
+
+            <div class="feature-card" style="border-left: 4px solid #059669;">
+                <div class="feature-icon" style="background: #ecfdf5; color: #059669;">💬</div>
+                <div class="feature-content">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                        <div class="feature-title">Live Chat & Consultation</div>
+                        <span class="badge badge-live">✓ Live</span>
+                    </div>
+                    <div class="feature-desc">Message doctors directly for consultations and follow-ups</div>
+                </div>
+                <a href="/chat/" class="btn" style="background: #059669; color: white;">Start Chat</a>
+            </div>
+
+        </div>
+
+        {% if appointments %}
+        <h2 class="section-title">📅 Your Recent Appointments</h2>
+        <div style="background: white; border-radius: 12px; padding: 20px; border: 1px solid #e5e7eb;">
+            {% for appointment in appointments %}
+            <div style="padding: 15px; border-bottom: 1px solid #e5e7eb;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong>Dr. {{ appointment.doctor.name }}</strong> - {{ appointment.doctor.get_specialty_display }}<br>
+                        <small style="color: #6b7280;">{{ appointment.appointment_date }} at {{ appointment.get_appointment_time_display }}</small>
+                    </div>
+                    <span class="badge {% if appointment.status == 'pending' %}badge-planned{% else %}badge-live{% endif %}">
+                        {{ appointment.get_status_display }}
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- ── RBAC Popup Modal — Patient role highlighted ───────────────────── -->
+    <div id="rbacModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.55); z-index:1000; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:white; border-radius:16px; max-width:780px; width:100%; max-height:90vh; overflow-y:auto;">
+
+            <div style="background:linear-gradient(135deg,#dc2626,#991b1b); padding:30px; border-radius:16px 16px 0 0; text-align:center; color:white;">
+                <div style="font-size:52px; margin-bottom:10px;">🔐</div>
+                <h2 style="font-size:24px; margin-bottom:8px;">Role-Based Access Control</h2>
+                <p style="opacity:0.9; font-size:14px;">Every user in CareConnect+ has a role with specific permissions</p>
+            </div>
+
+            <div style="padding:30px;">
+
+                <!-- Current Role -->
+                <div style="background:#eff6ff; border:2px solid #0066cc; border-radius:10px; padding:16px 20px; display:flex; align-items:center; gap:15px; margin-bottom:25px;">
+                    <div style="width:48px; height:48px; background:linear-gradient(135deg,#0066cc,#004d99); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">🧑‍💼</div>
+                    <div>
+                        <div style="font-size:12px; color:#6b7280; font-weight:600; margin-bottom:2px;">YOU ARE LOGGED IN AS</div>
+                        <div style="font-size:18px; font-weight:700;">{{ user.get_full_name|default:user.username }}</div>
+                        <span style="background:#d1fae5; color:#065f46; padding:3px 12px; border-radius:20px; font-size:12px; font-weight:700; display:inline-block; margin-top:4px;">✓ Patient Role Active</span>
+                    </div>
+                </div>
+
+                <!-- What is RBAC -->
+                <div style="background:#f9fafb; border-radius:10px; padding:18px; margin-bottom:25px;">
+                    <h3 style="font-size:16px; font-weight:700; margin-bottom:8px;">🔍 What is RBAC?</h3>
+                    <p style="font-size:14px; color:#4b5563; line-height:1.7;">Role-Based Access Control (RBAC) is a security method that gives each user only the access they need. In CareConnect+, your role is assigned at registration. Every page and URL is protected — wrong role = access denied automatically.</p>
+                </div>
+
+                <!-- 3 Roles — Patient highlighted -->
+                <h3 style="font-size:16px; font-weight:700; margin-bottom:15px;">👥 All Three Roles in CareConnect+</h3>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-bottom:25px;">
+
+                    <!-- Patient — YOUR ROLE -->
+                    <div style="background:#eff6ff; border:3px solid #0066cc; border-radius:12px; padding:20px; text-align:center; position:relative;">
+                        <div style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#0066cc; color:white; font-size:11px; font-weight:700; padding:2px 12px; border-radius:20px; white-space:nowrap;">← YOUR ROLE</div>
+                        <div style="font-size:36px; margin-bottom:8px;">🧑‍💼</div>
+                        <div style="font-weight:700; color:#0066cc; font-size:16px; margin-bottom:12px;">Patient</div>
+                        <ul style="list-style:none; font-size:12px; color:#374151; text-align:left; line-height:2.2;">
+                            <li>✅ Book appointments</li>
+                            <li>✅ View own medical records</li>
+                            <li>✅ AI chat assistant</li>
+                            <li>✅ Update health profile</li>
+                            <li>❌ Doctor dashboard</li>
+                            <li>❌ Admin panel</li>
+                        </ul>
+                    </div>
+
+                    <!-- Doctor -->
+                    <div style="background:#f0fdf4; border:2px solid #059669; border-radius:12px; padding:20px; text-align:center;">
+                        <div style="font-size:36px; margin-bottom:8px;">👨‍⚕️</div>
+                        <div style="font-weight:700; color:#059669; font-size:16px; margin-bottom:12px;">Doctor</div>
+                        <ul style="list-style:none; font-size:12px; color:#374151; text-align:left; line-height:2.2;">
+                            <li>✅ View own appointments</li>
+                            <li>✅ Add prescriptions & notes</li>
+                            <li>✅ Record vital signs</li>
+                            <li>✅ View assigned patients</li>
+                            <li>❌ Patient private data</li>
+                            <li>❌ Admin panel</li>
+                        </ul>
+                    </div>
+
+                    <!-- Admin -->
+                    <div style="background:#fff1f2; border:2px solid #dc2626; border-radius:12px; padding:20px; text-align:center;">
+                        <div style="font-size:36px; margin-bottom:8px;">🛡️</div>
+                        <div style="font-weight:700; color:#dc2626; font-size:16px; margin-bottom:12px;">Admin</div>
+                        <ul style="list-style:none; font-size:12px; color:#374151; text-align:left; line-height:2.2;">
+                            <li>✅ Manage all users</li>
+                            <li>✅ View analytics</li>
+                            <li>✅ Add/remove doctors</li>
+                            <li>✅ Monitor appointments</li>
+                            <li>✅ Full system access</li>
+                            <li>✅ Audit logs</li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <div style="text-align:center;">
+                    <button onclick="document.getElementById('rbacModal').style.display='none'"
+                        style="background:#dc2626; color:white; border:none; padding:12px 50px; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer;">
+                        Close ✕
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('rbacModal').addEventListener('click', function(e) {
+            if (e.target === this) this.style.display = 'none';
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment - CareConnect+</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; color: #1f2937; }
+        .top-nav { background: white; border-bottom: 1px solid #e5e7eb; padding: 0 30px; height: 70px; display: flex; align-items: center; justify-content: space-between; }
+        .logo-section { display: flex; align-items: center; gap: 12px; }
+        .logo-icon { width: 40px; height: 40px; background: #0066cc; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .logo-text { font-size: 20px; font-weight: 700; color: #0066cc; }
+        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        .page-title { font-size: 28px; font-weight: 700; margin-bottom: 30px; }
+        .booking-card { background: white; border-radius: 12px; padding: 30px; border: 1px solid #e5e7eb; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+        .form-select, .form-input { width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 15px; }
+        .form-select:focus, .form-input:focus { outline: none; border-color: #0066cc; }
+        .btn-submit { width: 100%; padding: 14px; background: #0066cc; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 20px; }
+        .btn-submit:hover { background: #0052a3; }
+        .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .alert-success { background: #d1fae5; color: #065f46; }
+        .alert-error { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo-section">
+            <div class="logo-icon">⚕️</div>
+            <div class="logo-text">CareConnect+</div>
+        </div>
+        <a href="/logout/" style="background: #dc2626; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600;">Logout</a>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">📅 Book Appointment</h1>
+        <a href="/dashboard/" style="display:inline-block; margin-bottom:20px; background:#f3f4f6; color:#1f2937; padding:10px 20px; border-radius:8px; text-decoration:none; font-weight:600;">← Back to Dashboard</a>
+
+        <div class="booking-card">
+            {% if success %}
+            <div class="alert alert-success">✅ {{ success }}</div>
+            {% endif %}
+
+            {% if error %}
+            <div class="alert alert-error">❌ {{ error }}</div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label class="form-label">Select Doctor *</label>
+                    <select name="doctor" class="form-select" required>
+                        <option value="">-- Choose a Doctor --</option>
+                        <option value="24">Dr. Priya Sharma - General Physician (₹500)</option>
+                        <option value="25">Dr. Arjun Reddy - Dentist (₹800)</option>
+                        <option value="26">Dr. Ananya Iyer - Ophthalmologist (₹1000)</option>
+                        <option value="27">Dr. Vikram Singh - Cardiologist (₹1500)</option>
+                        <option value="28">Dr. Neha Kapoor - Dermatologist (₹900)</option>
+                        <option value="29">Dr. Rajesh Kumar - Orthopedic (₹1200)</option>
+                        <option value="30">Dr. Kavya Menon - Pediatrician (₹600)</option>
+                        <option value="31">Dr. Amit Patel - Psychiatrist (₹1100)</option>
+                        <option value="32">Dr. Sanjay Gupta - Cardiologist (₹1800)</option>
+                        <option value="33">Dr. Deepa Nair - General Physician (₹400)</option>
+                        <option value="34">Dr. Karthik Rao - Orthopedic (₹1300)</option>
+                        <option value="35">Dr. Meera Desai - Dermatologist (₹850)</option>
+                        <option value="36">Dr. Aditya Verma - Dentist (₹900)</option>
+                        <option value="37">Dr. Pooja Joshi - Ophthalmologist (₹950)</option>
+                        <option value="38">Dr. Rahul Khanna - General Physician (₹550)</option>
+                        <option value="39">Dr. Swati Malhotra - Pediatrician (₹650)</option>
+                        <option value="40">Dr. Tarun Mehta - Psychiatrist (₹1200)</option>
+                        <option value="41">Dr. Ritu Bhatia - Dermatologist (₹800)</option>
+                        <option value="42">Dr. Manish Agarwal - Cardiologist (₹1600)</option>
+                        <option value="43">Dr. Anjali Saxena - Ophthalmologist (₹1100)</option>
+                        <option value="44">Dr. Varun Chopra - Orthopedic (₹1400)</option>
+                        <option value="45">Dr. Ishita Sen - Dentist (₹700)</option>
+                        <option value="46">Dr. Nikhil Sharma - Pediatrician (₹700)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Appointment Date *</label>
+                    <input type="date" name="appointment_date" class="form-input" required min="2026-04-20">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Appointment Time *</label>
+                    <select name="appointment_time" class="form-select" required>
+                        <option value="">-- Select Time --</option>
+                        <option value="09:00">9:00 AM</option>
+                        <option value="09:30">9:30 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="10:30">10:30 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="11:30">11:30 AM</option>
+                        <option value="14:00">2:00 PM</option>
+                        <option value="14:30">2:30 PM</option>
+                        <option value="15:00">3:00 PM</option>
+                        <option value="15:30">3:30 PM</option>
+                        <option value="16:00">4:00 PM</option>
+                        <option value="16:30">4:30 PM</option>
+                        <option value="17:00">5:00 PM</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Reason for Visit</label>
+                    <textarea name="reason" class="form-input" rows="4" placeholder="Describe your symptoms or reason for consultation..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">✅ Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

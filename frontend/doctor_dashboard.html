@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard - CareConnect+</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; color: #1f2937; }
+        .top-nav { background: white; border-bottom: 1px solid #e5e7eb; padding: 0 30px; height: 70px; display: flex; align-items: center; justify-content: space-between; position: sticky; top:0; z-index:99; }
+        .logo-text { font-size: 20px; font-weight: 700; color: #059669; }
+        .btn-logout { background: #dc2626; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; }
+        .container { max-width: 1400px; margin: 40px auto; padding: 0 20px; }
+        .welcome { background: linear-gradient(135deg, #059669, #047857); color: white; padding: 30px; border-radius: 15px; margin-bottom: 30px; }
+        .welcome h1 { font-size: 28px; margin-bottom: 10px; }
+        .section-title { font-size: 22px; font-weight: 700; margin: 30px 0 20px; }
+        .doctors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .doctor-card { background: white; border-radius: 12px; padding: 20px; text-align: center; border: 1px solid #e5e7eb; transition: all 0.2s; }
+        .doctor-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .doctor-photo { width: 80px; height: 80px; background: linear-gradient(135deg, #059669, #047857); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 15px; }
+        .doctor-name { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
+        .doctor-specialty { font-size: 14px; color: #059669; margin-bottom: 8px; }
+        .doctor-experience { font-size: 13px; color: #6b7280; margin-bottom: 10px; }
+        .doctor-fee { font-size: 15px; font-weight: 700; color: #10b981; }
+        .appointment-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 15px; border: 1px solid #e5e7eb; }
+        .empty-state { text-align: center; padding: 40px; background: white; border-radius: 12px; color: #9ca3af; }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo-text">🏥 CareConnect+ Doctor Portal</div>
+        <div style="display:flex; gap:12px; align-items:center;">
+            <button onclick="document.getElementById('rbacModal').style.display='flex'"
+                style="background:#059669; color:white; padding:10px 20px; border-radius:8px; font-weight:600; border:none; cursor:pointer; font-size:14px;">
+                🔐 My Role
+            </button>
+            <a href="/logout/" class="btn-logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome">
+            <h1>Welcome, Dr. {{ user.get_full_name|default:user.username }}! 👨‍⚕️</h1>
+            <p>Manage your appointments and view all doctors in the system</p>
+        </div>
+
+        <h2 class="section-title">📅 Your Appointments</h2>
+        {% if appointments %}
+            {% for appointment in appointments %}
+            <div class="appointment-card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <strong>👤 {{ appointment.patient.get_full_name|default:appointment.patient.username }}</strong><br>
+                        <small style="color:#6b7280;">📅 {{ appointment.appointment_date|date:"d M Y" }} at {{ appointment.get_appointment_time_display }}</small>
+                        {% if appointment.reason %}<br><small style="color:#9ca3af;">Reason: {{ appointment.reason }}</small>{% endif %}
+                    </div>
+                    <span style="background:#d1fae5; color:#065f46; padding:4px 12px; border-radius:12px; font-size:12px; font-weight:600;">
+                        {{ appointment.get_status_display }}
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <div style="font-size:48px; margin-bottom:15px;">📭</div>
+                <p>No appointments yet</p>
+            </div>
+        {% endif %}
+
+        <h2 class="section-title">👨‍⚕️ All Doctors in CareConnect+ (23 Total)</h2>
+        <div class="doctors-grid">
+            <div class="doctor-card"><div class="doctor-photo">👩‍⚕️</div><div class="doctor-name">Dr. Priya Sharma</div><div class="doctor-specialty">General Physician</div><div class="doctor-experience">🎓 12 years exp</div><div class="doctor-fee">₹500</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👨‍⚕️</div><div class="doctor-name">Dr. Arjun Reddy</div><div class="doctor-specialty">Dentist</div><div class="doctor-experience">🎓 8 years exp</div><div class="doctor-fee">₹800</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👩‍⚕️</div><div class="doctor-name">Dr. Ananya Iyer</div><div class="doctor-specialty">Ophthalmologist</div><div class="doctor-experience">🎓 15 years exp</div><div class="doctor-fee">₹1000</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👨‍⚕️</div><div class="doctor-name">Dr. Vikram Singh</div><div class="doctor-specialty">Cardiologist</div><div class="doctor-experience">🎓 20 years exp</div><div class="doctor-fee">₹1500</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👩‍⚕️</div><div class="doctor-name">Dr. Neha Kapoor</div><div class="doctor-specialty">Dermatologist</div><div class="doctor-experience">🎓 10 years exp</div><div class="doctor-fee">₹900</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👨‍⚕️</div><div class="doctor-name">Dr. Rajesh Kumar</div><div class="doctor-specialty">Orthopedic</div><div class="doctor-experience">🎓 18 years exp</div><div class="doctor-fee">₹1200</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👩‍⚕️</div><div class="doctor-name">Dr. Kavya Menon</div><div class="doctor-specialty">Pediatrician</div><div class="doctor-experience">🎓 9 years exp</div><div class="doctor-fee">₹600</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👨‍⚕️</div><div class="doctor-name">Dr. Amit Patel</div><div class="doctor-specialty">Psychiatrist</div><div class="doctor-experience">🎓 14 years exp</div><div class="doctor-fee">₹1100</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👨‍⚕️</div><div class="doctor-name">Dr. Sanjay Gupta</div><div class="doctor-specialty">Cardiologist</div><div class="doctor-experience">🎓 22 years exp</div><div class="doctor-fee">₹1800</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👩‍⚕️</div><div class="doctor-name">Dr. Deepa Nair</div><div class="doctor-specialty">General Physician</div><div class="doctor-experience">🎓 7 years exp</div><div class="doctor-fee">₹400</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👨‍⚕️</div><div class="doctor-name">Dr. Karthik Rao</div><div class="doctor-specialty">Orthopedic</div><div class="doctor-experience">🎓 16 years exp</div><div class="doctor-fee">₹1300</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👩‍⚕️</div><div class="doctor-name">Dr. Meera Desai</div><div class="doctor-specialty">Dermatologist</div><div class="doctor-experience">🎓 11 years exp</div><div class="doctor-fee">₹850</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👨‍⚕️</div><div class="doctor-name">Dr. Aditya Verma</div><div class="doctor-specialty">Dentist</div><div class="doctor-experience">🎓 13 years exp</div><div class="doctor-fee">₹900</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👩‍⚕️</div><div class="doctor-name">Dr. Pooja Joshi</div><div class="doctor-specialty">Ophthalmologist</div><div class="doctor-experience">🎓 12 years exp</div><div class="doctor-fee">₹950</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👨‍⚕️</div><div class="doctor-name">Dr. Rahul Khanna</div><div class="doctor-specialty">General Physician</div><div class="doctor-experience">🎓 15 years exp</div><div class="doctor-fee">₹550</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👩‍⚕️</div><div class="doctor-name">Dr. Swati Malhotra</div><div class="doctor-specialty">Pediatrician</div><div class="doctor-experience">🎓 10 years exp</div><div class="doctor-fee">₹650</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👨‍⚕️</div><div class="doctor-name">Dr. Tarun Mehta</div><div class="doctor-specialty">Psychiatrist</div><div class="doctor-experience">🎓 17 years exp</div><div class="doctor-fee">₹1200</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👩‍⚕️</div><div class="doctor-name">Dr. Ritu Bhatia</div><div class="doctor-specialty">Dermatologist</div><div class="doctor-experience">🎓 8 years exp</div><div class="doctor-fee">₹800</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👨‍⚕️</div><div class="doctor-name">Dr. Manish Agarwal</div><div class="doctor-specialty">Cardiologist</div><div class="doctor-experience">🎓 19 years exp</div><div class="doctor-fee">₹1600</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👩‍⚕️</div><div class="doctor-name">Dr. Anjali Saxena</div><div class="doctor-specialty">Ophthalmologist</div><div class="doctor-experience">🎓 14 years exp</div><div class="doctor-fee">₹1100</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👨‍⚕️</div><div class="doctor-name">Dr. Varun Chopra</div><div class="doctor-specialty">Orthopedic</div><div class="doctor-experience">🎓 21 years exp</div><div class="doctor-fee">₹1400</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👩‍⚕️</div><div class="doctor-name">Dr. Ishita Sen</div><div class="doctor-specialty">Dentist</div><div class="doctor-experience">🎓 6 years exp</div><div class="doctor-fee">₹700</div></div>
+            <div class="doctor-card"><div class="doctor-photo">👨‍⚕️</div><div class="doctor-name">Dr. Nikhil Sharma</div><div class="doctor-specialty">Pediatrician</div><div class="doctor-experience">🎓 11 years exp</div><div class="doctor-fee">₹700</div></div>
+        </div>
+    </div>
+
+    <!-- RBAC Modal — Doctor highlighted -->
+    <div id="rbacModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.55); z-index:1000; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:white; border-radius:16px; max-width:780px; width:100%; max-height:90vh; overflow-y:auto;">
+            <div style="background:linear-gradient(135deg,#059669,#047857); padding:30px; border-radius:16px 16px 0 0; text-align:center; color:white;">
+                <div style="font-size:52px; margin-bottom:10px;">🔐</div>
+                <h2 style="font-size:24px; margin-bottom:8px;">Role-Based Access Control</h2>
+                <p style="opacity:0.9; font-size:14px;">Every user in CareConnect+ has a role with specific permissions</p>
+            </div>
+            <div style="padding:30px;">
+                <div style="background:#f0fdf4; border:2px solid #059669; border-radius:10px; padding:16px 20px; display:flex; align-items:center; gap:15px; margin-bottom:25px;">
+                    <div style="width:48px; height:48px; background:linear-gradient(135deg,#059669,#047857); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px;">👨‍⚕️</div>
+                    <div>
+                        <div style="font-size:12px; color:#6b7280; font-weight:600;">YOU ARE LOGGED IN AS</div>
+                        <div style="font-size:18px; font-weight:700;">Dr. {{ user.get_full_name|default:user.username }}</div>
+                        <span style="background:#d1fae5; color:#065f46; padding:3px 12px; border-radius:20px; font-size:12px; font-weight:700; display:inline-block; margin-top:4px;">✓ Doctor Role Active</span>
+                    </div>
+                </div>
+                <div style="background:#f9fafb; border-radius:10px; padding:18px; margin-bottom:25px;">
+                    <h3 style="font-size:16px; font-weight:700; margin-bottom:8px;">🔍 What is RBAC?</h3>
+                    <p style="font-size:14px; color:#4b5563; line-height:1.7;">Role-Based Access Control gives each user only the access they need. Your Doctor role lets you manage appointments and patient records — while keeping admin controls separate for security.</p>
+                </div>
+                <h3 style="font-size:16px; font-weight:700; margin-bottom:15px;">👥 All Three Roles</h3>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-bottom:25px;">
+                    <div style="background:#eff6ff; border:2px solid #0066cc; border-radius:12px; padding:20px; text-align:center;">
+                        <div style="font-size:36px; margin-bottom:8px;">🧑‍💼</div>
+                        <div style="font-weight:700; color:#0066cc; font-size:16px; margin-bottom:12px;">Patient</div>
+                        <ul style="list-style:none; font-size:12px; color:#374151; text-align:left; line-height:2.2;">
+                            <li>✅ Book appointments</li>
+                            <li>✅ View own records</li>
+                            <li>✅ AI chat assistant</li>
+                            <li>❌ Doctor dashboard</li>
+                            <li>❌ Admin panel</li>
+                        </ul>
+                    </div>
+                    <!-- Doctor — YOUR ROLE -->
+                    <div style="background:#f0fdf4; border:3px solid #059669; border-radius:12px; padding:20px; text-align:center; position:relative;">
+                        <div style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#059669; color:white; font-size:11px; font-weight:700; padding:2px 12px; border-radius:20px; white-space:nowrap;">← YOUR ROLE</div>
+                        <div style="font-size:36px; margin-bottom:8px;">👨‍⚕️</div>
+                        <div style="font-weight:700; color:#059669; font-size:16px; margin-bottom:12px;">Doctor</div>
+                        <ul style="list-style:none; font-size:12px; color:#374151; text-align:left; line-height:2.2;">
+                            <li>✅ View own appointments</li>
+                            <li>✅ Add prescriptions</li>
+                            <li>✅ Record vital signs</li>
+                            <li>✅ View assigned patients</li>
+                            <li>❌ Patient private data</li>
+                            <li>❌ Admin panel</li>
+                        </ul>
+                    </div>
+                    <div style="background:#fff1f2; border:2px solid #dc2626; border-radius:12px; padding:20px; text-align:center;">
+                        <div style="font-size:36px; margin-bottom:8px;">🛡️</div>
+                        <div style="font-weight:700; color:#dc2626; font-size:16px; margin-bottom:12px;">Admin</div>
+                        <ul style="list-style:none; font-size:12px; color:#374151; text-align:left; line-height:2.2;">
+                            <li>✅ Manage all users</li>
+                            <li>✅ View analytics</li>
+                            <li>✅ Add/remove doctors</li>
+                            <li>✅ Full system access</li>
+                            <li>✅ Audit logs</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="text-align:center;">
+                    <button onclick="document.getElementById('rbacModal').style.display='none'" style="background:#059669; color:white; border:none; padding:12px 50px; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer;">Close ✕</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('rbacModal').addEventListener('click', function(e) { if(e.target===this) this.style.display='none'; });
+    </script>
+</body>
+</html>

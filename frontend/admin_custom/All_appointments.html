@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Appointments - Admin Panel</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; }
+        .top-nav { background: white; padding: 0 30px; height: 70px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e5e7eb; }
+        .logo-text { font-size: 20px; font-weight: 700; color: #dc2626; }
+        .back-btn { background: #f3f4f6; color: #4b5563; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; }
+        .container { max-width: 1400px; margin: 40px auto; padding: 0 30px; }
+        .page-title { font-size: 28px; font-weight: 700; margin-bottom: 20px; }
+        .filter-btns { margin-bottom: 20px; display: flex; gap: 10px; }
+        .filter-btn { padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 600; }
+        .filter-btn.active { background: #dc2626; color: white; }
+        .filter-btn:not(.active) { background: #f3f4f6; color: #4b5563; }
+        .appointments-section { background: white; padding: 30px; border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 12px; font-size: 13px; font-weight: 600; color: #6b7280; border-bottom: 2px solid #e5e7eb; }
+        td { padding: 15px 12px; border-bottom: 1px solid #f3f4f6; font-size: 14px; }
+        .status-badge { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; text-transform: capitalize; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-confirmed { background: #d1fae5; color: #065f46; }
+        .status-completed { background: #dbeafe; color: #1e40af; }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo-text">All Appointments</div>
+        <a href="/admin-dashboard/" class="back-btn">← Back</a>
+    </nav>
+    <div class="container">
+        <h1 class="page-title">All Appointments ({{ appointments.count }})</h1>
+        <div class="filter-btns">
+            <a href="/admin/appointments/" class="filter-btn {% if not status_filter %}active{% endif %}">All</a>
+            <a href="/admin/appointments/?status=pending" class="filter-btn {% if status_filter == 'pending' %}active{% endif %}">Pending</a>
+            <a href="/admin/appointments/?status=confirmed" class="filter-btn {% if status_filter == 'confirmed' %}active{% endif %}">Confirmed</a>
+            <a href="/admin/appointments/?status=completed" class="filter-btn {% if status_filter == 'completed' %}active{% endif %}">Completed</a>
+        </div>
+        <div class="appointments-section">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for apt in appointments %}
+                    <tr>
+                        <td>#{{ apt.id }}</td>
+                        <td>{{ apt.patient.get_full_name|default:apt.patient.username }}</td>
+                        <td>Dr. {{ apt.doctor.name }}</td>
+                        <td>{{ apt.appointment_date }}</td>
+                        <td>{{ apt.get_appointment_time_display }}</td>
+                        <td><span class="status-badge status-{{ apt.status }}">{{ apt.status }}</span></td>
+                        <td>{{ apt.reason|truncatewords:8 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment - CareConnect+</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            color: #1f2937;
+        }
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0 30px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #0066cc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0066cc;
+        }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .search-bar {
+            position: relative;
+        }
+        .search-bar input {
+            width: 300px;
+            padding: 10px 15px 10px 40px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .search-bar input:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+        .notification-btn {
+            position: relative;
+            padding: 10px;
+            background: #f3f4f6;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 18px;
+            height: 18px;
+            background: #dc2626;
+            border-radius: 50%;
+            font-size: 10px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            background: #f3f4f6;
+            border-radius: 10px;
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #0066cc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .user-info {
+            text-align: left;
+        }
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .user-role {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+        .sidebar {
+            width: 260px;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            padding: 25px 0;
+        }
+        .menu-item {
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #6b7280;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+        }
+        .menu-item:hover {
+            background: #f3f4f6;
+            color: #0066cc;
+        }
+        .menu-item.active {
+            background: #eff6ff;
+            color: #0066cc;
+            border-right: 3px solid #0066cc;
+        }
+        .menu-icon {
+            font-size: 20px;
+            width: 24px;
+        }
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .page-header {
+            margin-bottom: 30px;
+        }
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        .page-subtitle {
+            font-size: 15px;
+            color: #6b7280;
+        }
+        
+        /* Steps Progress */
+        .steps-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        .steps-line {
+            position: absolute;
+            top: 20px;
+            left: 25%;
+            right: 25%;
+            height: 2px;
+            background: #e5e7eb;
+            z-index: 0;
+        }
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            z-index: 1;
+        }
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            z-index: 2;
+            border: 3px solid white;
+        }
+        .step.active .step-number {
+            background: #0066cc;
+            color: white;
+        }
+        .step.completed .step-number {
+            background: #10b981;
+            color: white;
+        }
+        .step-label {
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 500;
+            text-align: center;
+        }
+        .step.active .step-label {
+            color: #0066cc;
+            font-weight: 600;
+        }
+        .step.completed .step-label {
+            color: #10b981;
+        }
+        
+        /* Booking Card */
+        .booking-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            padding: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 25px;
+        }
+        
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+        
+        /* Doctor Selection Grid */
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .doctor-option {
+            padding: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .doctor-option:hover {
+            border-color: #0066cc;
+            background: #f9fafb;
+        }
+        .doctor-option.selected {
+            border-color: #0066cc;
+            background: #eff6ff;
+        }
+        .doctor-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0066cc, #004d99);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 10px;
+        }
+        .doctor-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        .doctor-specialty {
+            font-size: 13px;
+            color: #6b7280;
+        }
+        
+        /* Calendar */
+        .calendar {
+            margin-bottom: 25px;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .calendar-month {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+        .calendar-nav {
+            display: flex;
+            gap: 8px;
+        }
+        .calendar-nav button {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        .calendar-nav button:hover {
+            background: #f3f4f6;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        .calendar-day {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            padding: 8px;
+        }
+        .calendar-date {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .calendar-date:hover {
+            background: #f3f4f6;
+        }
+        .calendar-date.disabled {
+            color: #d1d5db;
+            cursor: not-allowed;
+        }
+        .calendar-date.disabled:hover {
+            background: transparent;
+        }
+        .calendar-date.selected {
+            background: #0066cc;
+            color: white;
+        }
+        .calendar-date.today {
+            border-color: #0066cc;
+            color: #0066cc;
+            font-weight: 700;
+        }
+        
+        /* Time Slots */
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+        }
+        .time-slot {
+            padding: 12px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .time-slot:hover {
+            background: #f3f4f6;
+            border-color: #0066cc;
+        }
+        .time-slot.selected {
+            background: #eff6ff;
+            border-color: #0066cc;
+            color: #0066cc;
+        }
+        .time-slot.unavailable {
+            background: #f9fafb;
+            color: #d1d5db;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+        .time-slot.unavailable:hover {
+            background: #f9fafb;
+            border-color: #e5e7eb;
+        }
+        
+        /* Summary */
+        .summary-box {
+            background: #f9fafb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        .summary-label {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        .summary-value {
+            font-size: 14px;
+            color: #1f2937;
+            font-weight: 600;
+        }
+        
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        .btn-primary {
+            background: #0066cc;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0052a3;
+        }
+        .btn-primary:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+        
+        /* Step Content */
+        .step-content {
+            display: none;
+        }
+        .step-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 1024px) {
+            .sidebar {
+                display: none;
+            }
+        }
+        @media (max-width: 768px) {
+            .search-bar {
+                display: none;
+            }
+            .content-area {
+                padding: 20px 15px;
+            }
+            .doctors-grid {
+                grid-template-columns: 1fr;
+            }
+            .time-slots {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo-section">
+            <div class="logo-icon">⚕️</div>
+            <div class="logo-text">CareConnect+</div>
+        </div>
+        <div class="nav-right">
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="Search doctors, appointments...">
+            </div>
+            <button class="notification-btn" onclick="alert('3 new notifications')">
+                🔔
+                <span class="notification-badge">3</span>
+            </button>
+            <div class="user-profile">
+                <div class="user-avatar">{{ user.first_name.0|upper }}{{ user.last_name.0|upper }}</div>
+                <div class="user-info">
+                    <div class="user-name">{{ user.get_full_name|default:"Guest User" }}</div>
+                    <div class="user-role">Patient</div>
+                </div>
+            </div>
+            <a href="{% url 'logout' %}" style="background: #dc2626; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-left: 10px;">
+                Logout
+            </a>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <a href="{% url 'dashboard' %}" class="menu-item" style="text-decoration: none;">
+                <span class="menu-icon">📊</span>
+                Dashboard
+            </a>
+            <a href="{% url 'book_appointment' %}" class="menu-item active" style="text-decoration: none;">
+                <span class="menu-icon">📅</span>
+                Book Appointment
+            </a>
+            <a href="{% url 'doctors_list' %}" class="menu-item" style="text-decoration: none;">
+                <span class="menu-icon">👨‍⚕️</span>
+                Find Doctors
+            </a>
+            <button class="menu-item" onclick="alert('Records feature coming soon!')">
+                <span class="menu-icon">📋</span>
+                Records
+            </button>
+            <a href="{% url 'profile' %}" class="menu-item" style="text-decoration: none;">
+                <span class="menu-icon">⚙️</span>
+                Settings
+            </a>
+        </aside>
+
+        <main class="content-area">
+            <div class="page-header">
+                <h1 class="page-title">Book Appointment</h1>
+                <p class="page-subtitle">Schedule your visit in 3 easy steps</p>
+            </div>
+
+            <!-- Steps Progress -->
+            <div class="steps-container">
+                <div class="steps-line"></div>
+                <div class="steps">
+                    <div class="step active" id="step1-indicator">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Select Doctor</div>
+                    </div>
+                    <div class="step" id="step2-indicator">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Choose Date & Time</div>
+                    </div>
+                    <div class="step" id="step3-indicator">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Confirm Booking</div>
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST" id="bookingForm">
+                {% csrf_token %}
+                <input type="hidden" name="doctor" id="selectedDoctorId">
+                <input type="hidden" name="appointment_date" id="selectedDate">
+                <input type="hidden" name="appointment_time" id="selectedTime">
+
+                <!-- Step 1: Select Doctor -->
+                <div class="step-content active" id="step1">
+                    <div class="booking-card">
+                        <h3 class="card-title">👨‍⚕️ Select Your Doctor</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Search Doctor</label>
+                            <input type="text" class="form-input" id="doctorSearch" placeholder="Search by name or specialty...">
+                        </div>
+
+                        <div class="doctors-grid" id="doctorsGrid">
+                            {% for doctor in doctors %}
+                            <div class="doctor-option" data-id="{{ doctor.id }}" data-name="Dr. {{ doctor.name }}" data-specialty="{{ doctor.get_specialty_display }}">
+                                <div class="doctor-avatar">👨‍⚕️</div>
+                                <div class="doctor-name">Dr. {{ doctor.name }}</div>
+                                <div class="doctor-specialty">{{ doctor.get_specialty_display }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary" id="step1Next" disabled>Next Step →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Choose Date & Time -->
+                <div class="step-content" id="step2">
+                    <div class="booking-card">
+                        <h3 class="card-title">📅 Choose Date & Time</h3>
+                        
+                        <div class="calendar">
+                            <div class="calendar-header">
+                                <div class="calendar-month">February 2026</div>
+                                <div class="calendar-nav">
+                                    <button type="button">←</button>
+                                    <button type="button">→</button>
+                                </div>
+                            </div>
+                            <div class="calendar-grid">
+                                <div class="calendar-day">Sun</div>
+                                <div class="calendar-day">Mon</div>
+                                <div class="calendar-day">Tue</div>
+                                <div class="calendar-day">Wed</div>
+                                <div class="calendar-day">Thu</div>
+                                <div class="calendar-day">Fri</div>
+                                <div class="calendar-day">Sat</div>
+                                
+                                <div class="calendar-date disabled">1</div>
+                                <div class="calendar-date disabled">2</div>
+                                <div class="calendar-date disabled">3</div>
+                                <div class="calendar-date disabled">4</div>
+                                <div class="calendar-date disabled">5</div>
+                                <div class="calendar-date disabled">6</div>
+                                <div class="calendar-date disabled">7</div>
+                                <div class="calendar-date disabled">8</div>
+                                <div class="calendar-date disabled">9</div>
+                                <div class="calendar-date disabled">10</div>
+                                <div class="calendar-date disabled">11</div>
+                                <div class="calendar-date disabled">12</div>
+                                <div class="calendar-date disabled">13</div>
+                                <div class="calendar-date disabled">14</div>
+                                <div class="calendar-date today">15</div>
+                                <div class="calendar-date" data-date="2026-02-16">16</div>
+                                <div class="calendar-date" data-date="2026-02-17">17</div>
+                                <div class="calendar-date" data-date="2026-02-18">18</div>
+                                <div class="calendar-date" data-date="2026-02-19">19</div>
+                                <div class="calendar-date" data-date="2026-02-20">20</div>
+                                <div class="calendar-date" data-date="2026-02-21">21</div>
+                                <div class="calendar-date" data-date="2026-02-22">22</div>
+                                <div class="calendar-date" data-date="2026-02-23">23</div>
+                                <div class="calendar-date" data-date="2026-02-24">24</div>
+                                <div class="calendar-date" data-date="2026-02-25">25</div>
+                                <div class="calendar-date" data-date="2026-02-26">26</div>
+                                <div class="calendar-date" data-date="2026-02-27">27</div>
+                                <div class="calendar-date" data-date="2026-02-28">28</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Select Time Slot *</label>
+                            <div class="time-slots">
+                                <div class="time-slot" data-time="09:00">9:00 AM</div>
+                                <div class="time-slot" data-time="10:00">10:00 AM</div>
+                                <div class="time-slot" data-time="11:00">11:00 AM</div>
+                                <div class="time-slot unavailable">12:00 PM</div>
+                                <div class="time-slot" data-time="14:00">2:00 PM</div>
+                                <div class="time-slot" data-time="15:00">3:00 PM</div>
+                                <div class="time-slot" data-time="16:00">4:00 PM</div>
+                                <div class="time-slot unavailable">5:00 PM</div>
+                                <div class="time-slot" data-time="18:00">6:00 PM</div>
+                            </div>
+                        </div>
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary" id="step2Back">← Back</button>
+                            <button type="button" class="btn btn-primary" id="step2Next" disabled>Next Step →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Confirm Booking -->
+                <div class="step-content" id="step3">
+                    <div class="booking-card">
+                        <h3 class="card-title">✅ Confirm Your Appointment</h3>
+                        
+                        <div class="summary-box">
+                            <div class="summary-item">
+                                <div class="summary-label">Doctor</div>
+                                <div class="summary-value" id="summaryDoctor">-</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">Specialty</div>
+                                <div class="summary-value" id="summarySpecialty">-</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">Date</div>
+                                <div class="summary-value" id="summaryDate">-</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">Time</div>
+                                <div class="summary-value" id="summaryTime">-</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Appointment Type *</label>
+                            <select class="form-select" name="appointment_type" required>
+                                <option value="">Choose appointment type...</option>
+                                <option value="consultation">General Consultation</option>
+                                <option value="followup">Follow-up Visit</option>
+                                <option value="emergency">Emergency</option>
+                                <option value="checkup">Routine Checkup</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Reason for Visit</label>
+                            <textarea class="form-input" name="reason" rows="4" placeholder="Please describe your symptoms or reason for appointment..."></textarea>
+                        </div>
+
+                        <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <p style="font-size: 14px; color: #92400e; margin: 0;">
+                                ℹ️ <strong>Important:</strong> Please arrive 15 minutes before your appointment. Payment will be collected at the clinic.
+                            </p>
+                        </div>
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary" id="step3Back">← Back</button>
+                            <button type="submit" class="btn btn-primary">Confirm Appointment</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let selectedDoctor = null;
+        let selectedDate = null;
+        let selectedTime = null;
+
+        // Step 1: Doctor Selection
+        const doctorOptions = document.querySelectorAll('.doctor-option');
+        const step1Next = document.getElementById('step1Next');
+        
+        doctorOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                doctorOptions.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                selectedDoctor = {
+                    id: this.getAttribute('data-id'),
+                    name: this.getAttribute('data-name'),
+                    specialty: this.getAttribute('data-specialty')
+                };
+                
+                document.getElementById('selectedDoctorId').value = selectedDoctor.id;
+                step1Next.disabled = false;
+            });
+        });
+
+        // Doctor search
+        document.getElementById('doctorSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            doctorOptions.forEach(option => {
+                const name = option.getAttribute('data-name').toLowerCase();
+                const specialty = option.getAttribute('data-specialty').toLowerCase();
+                if (name.includes(searchTerm) || specialty.includes(searchTerm)) {
+                    option.style.display = 'block';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+        });
+
+        // Step 2: Date & Time Selection
+        const calendarDates = document.querySelectorAll('.calendar-date:not(.disabled)');
+        const timeSlots = document.querySelectorAll('.time-slot:not(.unavailable)');
+        const step2Next = document.getElementById('step2Next');
+        
+        calendarDates.forEach(date => {
+            date.addEventListener('click', function() {
+                calendarDates.forEach(d => d.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedDate = this.getAttribute('data-date');
+                document.getElementById('selectedDate').value = selectedDate;
+                checkStep2Complete();
+            });
+        });
+        
+        timeSlots.forEach(slot => {
+            slot.addEventListener('click', function() {
+                timeSlots.forEach(s => s.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedTime = this.getAttribute('data-time');
+                document.getElementById('selectedTime').value = selectedTime;
+                checkStep2Complete();
+            });
+        });
+
+        function checkStep2Complete() {
+            step2Next.disabled = !(selectedDate && selectedTime);
+        }
+
+        // Navigation
+        step1Next.addEventListener('click', () => goToStep(2));
+        document.getElementById('step2Back').addEventListener('click', () => goToStep(1));
+        document.getElementById('step2Next').addEventListener('click', () => goToStep(3));
+        document.getElementById('step3Back').addEventListener('click', () => goToStep(2));
+
+        function goToStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.step').forEach(s => {
+                s.classList.remove('active');
+                s.classList.remove('completed');
+            });
+            
+            // Show current step
+            document.getElementById(`step${step}`).classList.add('active');
+            document.getElementById(`step${step}-indicator`).classList.add('active');
+            
+            // Mark completed steps
+            for (let i = 1; i < step; i++) {
+                document.getElementById(`step${i}-indicator`).classList.add('completed');
+            }
+            
+            // Update summary in step 3
+            if (step === 3) {
+                document.getElementById('summaryDoctor').textContent = selectedDoctor.name;
+                document.getElementById('summarySpecialty').textContent = selectedDoctor.specialty;
+                
+                const dateObj = new Date(selectedDate);
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                document.getElementById('summaryDate').textContent = `${monthNames[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getFullYear()}`;
+                
+                const timeSlot = document.querySelector(`.time-slot[data-time="${selectedTime}"]`);
+                document.getElementById('summaryTime').textContent = timeSlot.textContent;
+            }
+            
+            currentStep = step;
+        }
+    </script>
+</body>
+</html>
